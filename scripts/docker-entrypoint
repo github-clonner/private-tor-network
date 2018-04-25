@@ -19,8 +19,12 @@ if [ ! -e /tor-config-done ]; then
     # Host specific modifications to the torrc file
     echo -e "DataDirectory ${TOR_DIR}/${TOR_NICKNAME}" >> /etc/tor/torrc
     # Updated to handle docker stack/swarm network overlays
-    TOR_IP=$(ip addr show | grep -v '127.0.0.1' | grep -Po 'inet \K[\d.]+')
-    NICS=$(ip addr | grep 'state UP' | awk '{print $2}' | cut -f1 -d':')
+    #TOR_IP=$(ip addr show | grep -v '127.0.0.1' | grep -Po 'inet \K[\d.]+')
+    #NICS=$(ip addr | grep 'state UP' | awk '{print $2}' | cut -f1 -d'@')
+    # Hack to work with docker-compse and stack
+    while read -r nic; do
+	    TOR_IP=$(ip addr show $line | grep -Po 'inet \K[\d.]+')
+    done <<< $(ip addr | grep 'state UP' | awk '{print $2}' | cut -f1 -d'@')
     
     echo "Address ${TOR_IP}" >> /etc/tor/torrc
     echo -e "ControlPort 0.0.0.0:9051" >> /etc/tor/torrc
