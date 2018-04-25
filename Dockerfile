@@ -36,13 +36,9 @@ ENV TERM=xterm \
 
 # Install build dependencies
 RUN apt-get update && \
-    build_temps="build-essential automake" && \ 
-    build_deps="libssl-dev zlib1g-dev libevent-dev ca-certificates\
-        dh-apparmor libseccomp-dev dh-systemd \
-        git" && \
-    DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install $build_deps $build_temps \
-        init-system-helpers \
-        pwgen && \
+    build_temps="build-essential automake libssl-dev zlib1g-dev libevent-dev libseccomp-dev dh-apparmor dh-systemd git" && \ 
+    build_deps="libseccomp2 libevent-2.0-5 zlib1g  ca-certificates pwgen init-system-helpers" && \
+    DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install $build_deps $build_temps && \
     mkdir /src && \
     cd /src && \
     git clone https://git.torproject.org/tor.git && \
@@ -53,6 +49,7 @@ RUN apt-get update && \
     make && \
     make install && \
     apt-get -y purge --auto-remove $build_temps && \
+    apt-get -y --no-install-recommends install $build_deps && \
     apt-get clean && rm -r /var/lib/apt/lists/* && \
     rm -rf /src/*
 
