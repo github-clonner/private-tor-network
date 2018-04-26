@@ -4,7 +4,7 @@
 
 ### Quickstart
 
-The easiest way to get a tor network up and running is to use `docker swarm deploy` command:
+The easiest way to get a tor network up and running is to use `docker stack deploy` command:
 
 ```
 docker stack deploy --compose-file docker-compose.yml torstack
@@ -124,7 +124,7 @@ while they decided on a consensus.)
 
 **Tor-prompt**:
 
-If you've installed arm you will probably also have the `tor-prompt` command. You can use it to manually 
+If you've installed `arm` you will probably also have the `tor-prompt` command. You can use it to manually 
 gather information about some of the containers that have their Control Port exposed like so:
 
 ```
@@ -137,14 +137,17 @@ Control Port password: password
 
 Here are a few things to try if you're runing into issues:
 
-* Check the tor logs sent to stdout `docker logs -f torstack_da_1.xxxxxx`
+* Check the tor logs sent to stdout `docker service logs -f {stackname}_da_1`
 * Enable verbose logging by changing the `./config/torrc` 
 * If you're using the old `docker-compose.2.yml` with the old storage, check permissions for your ./tor folder
-* Delete the old `tor` named volume from Docker with `docker volume rm torstack` or whatever you named your stack
+* Delete the old `tor` named volume from Docker with `docker volume rm {stackname}`
 
 ### TODO
 
 * DONE: Wait for someone to yell at me about using scale like this and then move to the new networking
+* DONE: Stop statically referencing the network interfaces
+* Add support for new onion-ng services
+* Add IPv6 support
 
 ### Dislaimer
 
